@@ -3,7 +3,6 @@
     package="com.example.hackintosh.forcethemdoit">
 
     <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
     <application
         android:allowBackup="true"
@@ -27,6 +26,7 @@
         <service
             android:name=".SmsSender"
             android:enabled="true" />
+        <activity android:name=".AddSchedule"></activity>
     </application>
 
 </manifest>
