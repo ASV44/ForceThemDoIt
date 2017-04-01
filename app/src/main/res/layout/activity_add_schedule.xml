@@ -15,8 +15,8 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:id="@+id/csvText"
-        android:hint="CSV Text"
+        android:id="@+id/recipientsList"
+        android:hint="Recipients, Name=Phonenomber"
         android:layout_height="wrap_content"
         android:layout_below="@+id/scheduleName"/>
 
