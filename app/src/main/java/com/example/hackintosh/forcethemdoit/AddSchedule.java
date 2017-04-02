@@ -22,9 +22,10 @@ import java.util.Map;
 public class AddSchedule extends AppCompatActivity {
 
     SmsSender sender;
+    private DataBase dataBase;
 
     private Map<String, String> recipientsMap(String recipientsListString) {
-        Map<String, String> dict = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> dict = new LinkedHashMap<String, String>();
         String[] lines = recipientsListString.split( "\n" );
 
         for( int i = 0; i < lines.length; i++ ) {
@@ -35,6 +36,7 @@ public class AddSchedule extends AppCompatActivity {
             }
             dict.put(line_elements[line_elements.length - 1], str);
         }
+        //dataBase.populateDB(dict);
         return dict;
     }
 
@@ -42,6 +44,8 @@ public class AddSchedule extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_schedule);
+
+        dataBase = new DataBase(getApplicationContext());
 
         Button sendSms = (Button) findViewById(R.id.getCsvText);
         final TextView recipientsList = (TextView) findViewById(R.id.recipientsList);

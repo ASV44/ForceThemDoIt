@@ -23,6 +23,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         public static final String MESSAGE = "message";
     }
 
+    public static class FlagModel implements BaseColumns {
+        public static final String TABLE_NAME = "sendFlag";
+        public static final String FLAG = "flag";
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
 
@@ -38,6 +43,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                ReceiverModel._ID + " INTEGER PRIMARY KEY," +
                ReceiverModel.NUMBER + " TEXT," +
                ReceiverModel.MESSAGE + " TEXT)";
+
+        db.execSQL(table);
+    }
+
+    public void addNewFlagTable(SQLiteDatabase db) {
+        String table = "CREATE TABLE " + FlagModel.TABLE_NAME + " (" +
+                FlagModel._ID + " INTEGER PRIMARY KEY," +
+                FlagModel.FLAG + " TEXT)";
 
         db.execSQL(table);
     }
