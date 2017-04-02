@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ public class AddSchedule extends AppCompatActivity {
     SmsSender sender;
 
     private Map<String, String> recipientsMap(String recipientsListString) {
-        Map<String, String> dict = new HashMap<String, String>();
+        Map<String, String> dict = new LinkedHashMap<String, String>();
         String[] lines = recipientsListString.split( "\n" );
 
         for( int i = 0; i < lines.length; i++ ) {
@@ -35,10 +36,6 @@ public class AddSchedule extends AppCompatActivity {
             dict.put(line_elements[line_elements.length - 1], str);
         }
         return dict;
-    }
-
-    private  void sendSms(Map<String, String>) {
-
     }
 
     @Override
@@ -54,6 +51,7 @@ public class AddSchedule extends AppCompatActivity {
             public void onClick(View v) {
                 String recipientsListString = recipientsList.getText().toString();
                 Map<String, String> recipientsDict = recipientsMap(recipientsListString);
+                Log.d("mytag", recipientsDict.toString());
             }
         });
 
