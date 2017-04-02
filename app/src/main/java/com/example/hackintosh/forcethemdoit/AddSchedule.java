@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,9 +24,9 @@ public class AddSchedule extends AppCompatActivity {
 
     SmsSender sender;
 
-    private Map<String, String> recipientsMap(String recipientsListString) {
-        Map<String, String> dict = new LinkedHashMap<String, String>();
+    private ArrayList<ArrayList> recipientsBigList(String recipientsListString) {
         String[] lines = recipientsListString.split( "\n" );
+        ArrayList<ArrayList> recList = new ArrayList<ArrayList>();
 
         for( int i = 0; i < lines.length; i++ ) {
             String[] line_elements = lines[i].split("\\s+");
@@ -33,9 +34,12 @@ public class AddSchedule extends AppCompatActivity {
             for( int j = 0; j < line_elements.length - 1; j++){
                 str += line_elements[j];
             }
-            dict.put(line_elements[line_elements.length - 1], str);
+            ArrayList<String> list = new ArrayList<String>();
+            list.add(line_elements[line_elements.length - 1]);
+            list.add(str);
+            recList.add(list);
         }
-        return dict;
+        return recList;
     }
 
     @Override
@@ -50,8 +54,8 @@ public class AddSchedule extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String recipientsListString = recipientsList.getText().toString();
-                Map<String, String> recipientsDict = recipientsMap(recipientsListString);
-                Log.d("mytag", recipientsDict.toString());
+                ArrayList<ArrayList> recipients2Lists = recipientsBigList(recipientsListString);
+                Log.d("mytag", recipients2Lists.toString());
             }
         });
 
