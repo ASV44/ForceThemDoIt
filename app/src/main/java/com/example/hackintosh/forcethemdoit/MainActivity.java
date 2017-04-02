@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         //sender.sendSms("068591082", "Test Message");
         sendSMS = new Intent(this, SmsSender.class);
         sendSMS.putExtra("victims",victims);
-        startService(sendSMS);
+        //startService(sendSMS);
         FloatingActionButton newSchedule = (FloatingActionButton) findViewById(R.id.addSchedule);
 
         newSchedule.setOnClickListener(new View.OnClickListener() {

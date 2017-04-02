@@ -32,7 +32,7 @@ public class AddSchedule extends AppCompatActivity {
                 String recipientsListString = recipientsList.getText().toString();
                 Log.d("myTag2", recipientsListString);
 
-                sender.sendSms("068591082", "We are developing SMS sender now");
+                //sender.sendSms("068591082", "We are developing SMS sender now");
             }
         });
 

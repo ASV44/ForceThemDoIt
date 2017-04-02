@@ -27,15 +27,17 @@ public class SmsMonitor extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.d("BroadcastReceiver","Receive");
         if (intent != null && intent.getAction() != null &&
                 ACTION.compareToIgnoreCase(intent.getAction()) == 0) {
             Object[] pduArray = (Object[]) intent.getExtras().get("pdus");
             for (Object aPduArray : pduArray) {
                 messages = SmsMessage.createFromPdu((byte[]) aPduArray);
-                if(victims.keySet().contains(messages.getDisplayOriginatingAddress())) {
-                    Log.d("currentNumbers","" + victims);
-                    //currentNumbers.remove(messages.getDisplayOriginatingAddress());
-                }
+//                if(victims.keySet().contains(messages.getDisplayOriginatingAddress())) {
+//                    Log.d("currentNumbers","" + victims);
+//                    //currentNumbers.remove(messages.getDisplayOriginatingAddress());
+//                }
+                Log.d("Message",messages.getMessageBody().toString());
             }
         }
     }
