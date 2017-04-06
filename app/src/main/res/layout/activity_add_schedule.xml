@@ -11,24 +11,47 @@
         android:hint="Schedule Name"
         android:id="@+id/scheduleName"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"/>
+        android:layout_alignParentTop="true" />
 
     <EditText
         android:layout_width="match_parent"
         android:id="@+id/recipientsList"
-        android:hint="Recipients, Name=Phonenomber"
+        android:hint="Name Surname 067000000\nName2 Surname2 067000001"
         android:layout_height="wrap_content"
         android:layout_below="@+id/scheduleName"/>
 
+    <EditText
+        android:layout_width="match_parent"
+        android:id="@+id/recipientsText"
+        android:hint="Text to send"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/recipientsList"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:id="@+id/sendDelay"
+        android:hint="Interval between messages (in Min)"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/recipientsText"/>
+
     <Button
-        android:id="@+id/getCsvText"
+        android:id="@+id/sendButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Send"
-        android:layout_below="@+id/recipientsList"
+        android:layout_below="@+id/sendDelay"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
          />
 
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel Sending"
+        android:layout_below="@+id/sendButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        />
 
 </RelativeLayout>

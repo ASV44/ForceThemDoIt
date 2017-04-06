@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,19 +25,20 @@ public class AddSchedule extends AppCompatActivity {
 
     SmsSender sender;
 
-    private ArrayList<ArrayList> recipientsBigList(String recipientsListString) {
+    private ArrayList<ArrayList> recipientsBigList(String recipientsListString, String defaultMessage) {
         String[] lines = recipientsListString.split( "\n" );
         ArrayList<ArrayList> recList = new ArrayList<ArrayList>();
 
         for( int i = 0; i < lines.length; i++ ) {
             String[] line_elements = lines[i].split("\\s+");
-            String str = "";
+            String message = "Hi ";
             for( int j = 0; j < line_elements.length - 1; j++){
-                str += line_elements[j];
+                message += line_elements[j] + " ";
             }
             ArrayList<String> list = new ArrayList<String>();
             list.add(line_elements[line_elements.length - 1]);
-            list.add(str);
+            message += "! " + defaultMessage;
+            list.add(message);
             recList.add(list);
         }
         return recList;
@@ -47,15 +49,19 @@ public class AddSchedule extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_schedule);
 
-        Button sendSms = (Button) findViewById(R.id.getCsvText);
+        Button sendSms = (Button) findViewById(R.id.sendButton);
         final TextView recipientsList = (TextView) findViewById(R.id.recipientsList);
+        final TextView smsText = (TextView) findViewById(R.id.recipientsText);
+        final TextView smsInterval = (TextView) findViewById(R.id.sendDelay);
 
         sendSms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String recipientsListString = recipientsList.getText().toString();
-                ArrayList<ArrayList> recipients2Lists = recipientsBigList(recipientsListString);
-                Log.d("mytag", recipients2Lists.toString());
+                String defaultMessage = smsText.getText().toString();
+                int smsIntervalMsec = Integer.parseInt(smsInterval.getText().toString()) * 60 * 1000;
+                Toast.makeText(AddSchedule.this, "Messages are sending now every " + String.valueOf(smsIntervalMsec) + " msec", Toast.LENGTH_LONG).show();
+                ArrayList<ArrayList> recipients2Lists = recipientsBigList(recipientsListString, defaultMessage);
             }
         });
 

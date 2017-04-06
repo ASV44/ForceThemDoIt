@@ -44,13 +44,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        dummyList();
+//        dummyList();
 
         scheduleListView = (RecyclerView) findViewById(R.id.scheduleList);
 
         scheduleListManager = new LinearLayoutManager(this);
         scheduleListView.setLayoutManager(scheduleListManager);
 
+        if (projectsList.isEmpty()) {
+            projectsList.add(0, "Add recipients");
+        }
         scheduleListAdapter = new ScheduleListAdapter(projectsList);
         scheduleListView.setAdapter(scheduleListAdapter);
     }
