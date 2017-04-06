@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ public class AddSchedule extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_schedule);
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN); // Hide keyboard
 
         Button sendSms = (Button) findViewById(R.id.sendButton);
         final TextView recipientsList = (TextView) findViewById(R.id.recipientsList);
@@ -59,10 +61,11 @@ public class AddSchedule extends AppCompatActivity {
             public void onClick(View v) {
                 String recipientsListString = recipientsList.getText().toString();
                 String defaultMessage = smsText.getText().toString();
-                int smsIntervalMsec = smsInterval.getText().toString() == "" ? Integer.parseInt(smsInterval.getText().toString()) * 1000 : 30 * 1000;
+                String smsIntervalText = smsInterval.getText().toString();
+                int smsIntervalMsec = !smsIntervalText.matches("") ? Integer.parseInt(smsIntervalText) * 1000 : 30 * 1000;
                 Toast.makeText(AddSchedule.this, "Messages are sending now every " + String.valueOf(smsIntervalMsec) + " msec", Toast.LENGTH_LONG).show();
                 ArrayList<ArrayList> recipients2Lists = recipientsBigList(recipientsListString, defaultMessage);
-                Log.d("mytag", recipients2Lists.toString());
+                Log.d("dragos", smsInterval.getText().toString());
             }
         });
 
