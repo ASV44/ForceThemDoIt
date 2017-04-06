@@ -59,9 +59,10 @@ public class AddSchedule extends AppCompatActivity {
             public void onClick(View v) {
                 String recipientsListString = recipientsList.getText().toString();
                 String defaultMessage = smsText.getText().toString();
-                int smsIntervalMsec = Integer.parseInt(smsInterval.getText().toString()) * 60 * 1000;
+                int smsIntervalMsec = smsInterval.getText().toString() == "" ? Integer.parseInt(smsInterval.getText().toString()) * 1000 : 30 * 1000;
                 Toast.makeText(AddSchedule.this, "Messages are sending now every " + String.valueOf(smsIntervalMsec) + " msec", Toast.LENGTH_LONG).show();
                 ArrayList<ArrayList> recipients2Lists = recipientsBigList(recipientsListString, defaultMessage);
+                Log.d("mytag", recipients2Lists.toString());
             }
         });
 

@@ -30,7 +30,7 @@
     <EditText
         android:layout_width="match_parent"
         android:id="@+id/sendDelay"
-        android:hint="Interval between messages (in Min)"
+        android:hint="Interval between messages(in sec, default 30s)"
         android:layout_height="wrap_content"
         android:layout_below="@+id/recipientsText"/>
 
