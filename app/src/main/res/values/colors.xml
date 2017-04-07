@@ -3,8 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="buttonColor">#57D1C9</color>
-    <color name="bgColor">#FFE869</color>
-    <color name="bgTextEdit">#ED5485</color>
-    <color name="textColor">#FFFBCB</color>
+
+    <color name="buttonColor">#FF165D</color>
+    <color name="bgColor">#3EC1D3</color>
+    <color name="bgTextEdit">#F6F7D7</color>
+    <color name="textColor">#F6F7D7</color>
 </resources>
