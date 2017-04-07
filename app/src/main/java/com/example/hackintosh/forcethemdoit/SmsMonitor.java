@@ -35,7 +35,7 @@ public class SmsMonitor extends BroadcastReceiver {
         if(dataBase == null) {
             dataBase = new DataBase(context);
         }
-        victims = dataBase.getTable(DataBaseHelper.ReceiverModel.TABLE_NAME);
+        victims = dataBase.getVictims(dataBase.getSchedule());
         if (intent != null && intent.getAction() != null &&
                 ACTION.compareToIgnoreCase(intent.getAction()) == 0) {
             Object[] pduArray = (Object[]) intent.getExtras().get("pdus");

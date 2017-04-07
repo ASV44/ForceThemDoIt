@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,28 +40,35 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView scheduleListView;
     private RecyclerView.Adapter scheduleListAdapter;
     private RecyclerView.LayoutManager scheduleListManager;
-    private BroadcastReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        victims = new ArrayList<String[]>();
-        victims.add(new String[] {"060642415","Hi, We are developing and testing SMS Sender Now.\nYou are our victim"});
-        victims.add(new String[] {"069000000","Hi, We are developing and testing SMS Sender Now.\nYou are our victim"});
-        victims.add(new String[] {"069111111","Hi, We are developing and testing SMS Sender Now.\nYou are our victim"});
+        TextView header = (TextView) findViewById(R.id.header);
+        Typeface typeface = Typeface.createFromAsset(getAssets(),"Milkshake.ttf");
+        header.setTypeface(typeface);
+        TextView scheduleText = (TextView) findViewById(R.id.scheduleText);
+        scheduleText.setTypeface(typeface);
+
+//        victims = new ArrayList<String[]>();
+//        victims.add(new String[] {"060642415","Hi, We are developing and testing SMS Sender Now.\nYou are our victim"});
+//        victims.add(new String[] {"069000000","Hi, We are developing and testing SMS Sender Now.\nYou are our victim"});
+//        victims.add(new String[] {"069111111","Hi, We are developing and testing SMS Sender Now.\nYou are our victim"});
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.SEND_SMS},1);
         }
         //sender.sendSms("068591082", "Test Message");
         DataBase dataBase = new DataBase(getApplicationContext());
-        dataBase.populateDB(victims);
-        dataBase.populateFlagTable("1");
-        sendSMS = new Intent(this, SmsSender.class);
+        dataBase.deleteTable("android_metadata");
+        //dataBase.populateDB(victims);
+        //dataBase.populateFlagTable("1");
+        //victims = dataBase.getVictims();
+        //sendSMS = new Intent(this, SmsSender.class);
         //sendSMS.putExtra("victims",victims);
-        startService(sendSMS);
+        //startService(sendSMS);
         FloatingActionButton newSchedule = (FloatingActionButton) findViewById(R.id.addSchedule);
 
         newSchedule.setOnClickListener(new View.OnClickListener() {
@@ -67,30 +76,34 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), AddSchedule.class);
                 startActivity(intent);
+                stopActivity();
             }
         });
 
-        dummyList();
+//        dummyList();
 
         scheduleListView = (RecyclerView) findViewById(R.id.scheduleList);
 
         scheduleListManager = new LinearLayoutManager(this);
         scheduleListView.setLayoutManager(scheduleListManager);
 
+        projectsList = dataBase.getDBschedules();
+        if (projectsList.isEmpty()) {
+            TextView emptyList = (TextView) findViewById(R.id.empty_list);
+            emptyList.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), AddSchedule.class);
+                    startActivity(intent);
+                    stopActivity();
+                }
+            });
+            emptyList.setVisibility(View.VISIBLE);
+        }
         scheduleListAdapter = new ScheduleListAdapter(projectsList);
         scheduleListView.setAdapter(scheduleListAdapter);
 
-        receiver  = new BroadcastReceiver(){
 
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d("onReceive","Works");
-//                time = intent.getExtras().getInt("time");
-//                lexiconDB.setNotificationTIme(time);
-                stopService(sendSMS);
-            }
-        };
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("STOP_SMS"));
     }
 
     @Override
@@ -113,5 +126,9 @@ public class MainActivity extends AppCompatActivity {
         for(int i = 0; i < 10; i++) {
             projectsList.add(i,"Element" + i);
         }
+    }
+
+    public void stopActivity() {
+        this.finish();
     }
 }

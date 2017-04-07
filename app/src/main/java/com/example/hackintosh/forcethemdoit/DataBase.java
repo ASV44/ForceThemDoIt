@@ -26,10 +26,10 @@ public class DataBase {
         db = dbHelper.getWritableDatabase();
     }
 
-    public void populateDB(List<String[]> victims) {
-        deleteTable(DataBaseHelper.ReceiverModel.TABLE_NAME);
-        if(!checkIfExist(DataBaseHelper.ReceiverModel.TABLE_NAME)) {
-            dbHelper.addNewReceiversTable(db);
+    public void populateDB(String tableName, List<String[]> victims) {
+        deleteTable(tableName);
+        if(!checkIfExist(tableName)) {
+            dbHelper.addNewReceiversTable(tableName,db);
         }
         db = dbHelper.getWritableDatabase();
 
@@ -37,21 +37,22 @@ public class DataBase {
             ContentValues values = new ContentValues();
             values.put(DataBaseHelper.ReceiverModel.NUMBER, victim[0]);
             values.put(DataBaseHelper.ReceiverModel.MESSAGE, victim[1]);
-            db.insert(DataBaseHelper.ReceiverModel.TABLE_NAME, null, values);
+            db.insert(tableName, null, values);
         }
-        showTable(DataBaseHelper.ReceiverModel.TABLE_NAME,
+        showTable(tableName,
                 DataBaseHelper.ReceiverModel.NUMBER,
                 DataBaseHelper.ReceiverModel.MESSAGE);
 
     }
 
-    public void populateFlagTable(String flag) {
+    public void populateFlagTable(String flag, String schedule) {
         deleteTable(DataBaseHelper.FlagModel.TABLE_NAME);
         if(!checkIfExist(DataBaseHelper.FlagModel.TABLE_NAME)) {
             dbHelper.addNewFlagTable(db);
         }
         ContentValues values = new ContentValues();
         values.put(DataBaseHelper.FlagModel.FLAG, flag);
+        values.put(DataBaseHelper.FlagModel.SCHEDULE, schedule);
         db.insert(DataBaseHelper.FlagModel.TABLE_NAME, null, values);
     }
 
@@ -104,7 +105,24 @@ public class DataBase {
         return null;
     }
 
-    public List<String[]> getTable(String tableName) {
+    public String getSchedule() {
+        if(checkIfExist(DataBaseHelper.FlagModel.TABLE_NAME)) {
+            Cursor cursor = db.rawQuery("select * from " + DataBaseHelper.FlagModel.TABLE_NAME, null);
+
+            String schedule = null;
+            while (cursor.moveToNext()) {
+                schedule = cursor.getString(
+                        cursor.getColumnIndexOrThrow(DataBaseHelper.FlagModel.SCHEDULE));
+            }
+            cursor.close();
+            return schedule;
+        }
+
+        return null;
+    }
+
+    public List<String[]> getVictims(String schedule) {
+        String tableName = schedule;
         if(checkIfExist(tableName)) {
             Cursor cursor = db.rawQuery("select * from " + tableName, null);
 
@@ -131,5 +149,26 @@ public class DataBase {
         String SQL_DELETE_ENTRIES =
                 "DROP TABLE IF EXISTS " + tableName;
         db.execSQL(SQL_DELETE_ENTRIES);
+    }
+
+    public List<String> getDBschedules() {
+        List<String> schedules = new ArrayList<String>();
+        db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+
+        if (cursor.moveToFirst()) {
+            while ( !cursor.isAfterLast() ) {
+                Log.d("TableNames",cursor.getString(0));
+                if(!cursor.getString(0).equals(DataBaseHelper.FlagModel.TABLE_NAME)) {
+                    schedules.add(cursor.getString(0));
+                }
+                cursor.moveToNext();
+
+            }
+        }
+        for(String schedule: schedules) {
+            Log.d("DataBase Schedules", "" + schedule);
+        }
+        return schedules;
     }
 }

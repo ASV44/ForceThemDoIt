@@ -26,6 +26,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static class FlagModel implements BaseColumns {
         public static final String TABLE_NAME = "sendFlag";
         public static final String FLAG = "flag";
+        public static final String SCHEDULE = "schedule";
     }
 
     @Override
@@ -38,8 +39,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public void addNewReceiversTable(SQLiteDatabase db) {
-       String table = "CREATE TABLE " + ReceiverModel.TABLE_NAME + " (" +
+    public void addNewReceiversTable(String tableName, SQLiteDatabase db) {
+       String table = "CREATE TABLE " + tableName + " (" +
                ReceiverModel._ID + " INTEGER PRIMARY KEY," +
                ReceiverModel.NUMBER + " TEXT," +
                ReceiverModel.MESSAGE + " TEXT)";
@@ -50,7 +51,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void addNewFlagTable(SQLiteDatabase db) {
         String table = "CREATE TABLE " + FlagModel.TABLE_NAME + " (" +
                 FlagModel._ID + " INTEGER PRIMARY KEY," +
-                FlagModel.FLAG + " TEXT)";
+                FlagModel.FLAG + " TEXT," +
+                FlagModel.SCHEDULE + " TEXT)";
 
         db.execSQL(table);
     }

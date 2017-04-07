@@ -1,6 +1,7 @@
 package com.example.hackintosh.forcethemdoit;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +31,14 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
         public ViewHolder(View v) {
             super(v);
             mText = (TextView) v.findViewById(R.id.myText);
+            mText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(),DeliveringActivity.class);
+                    intent.putExtra("schedule",mText.getText().toString());
+                    v.getContext().startActivity(intent);
+                }
+            });
         }
     }
 

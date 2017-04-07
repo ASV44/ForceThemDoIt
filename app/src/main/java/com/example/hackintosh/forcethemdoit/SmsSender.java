@@ -25,6 +25,7 @@ public class SmsSender extends Service {
     SmsManager smsManager;
     Intent sendSMSIntent;
     List<String[]> victims; //= new HashMap<String,String>();
+    private String scheduleName;
     private int time;
     private CountDownTimer timer;
     private DataBase dataBase;
@@ -46,7 +47,8 @@ public class SmsSender extends Service {
                 DataBaseHelper.ReceiverModel.MESSAGE);
         sendSMSIntent = intent;
         //victims = (HashMap<String, String>) intent.getSerializableExtra("victims");
-        victims = dataBase.getTable(DataBaseHelper.ReceiverModel.TABLE_NAME);
+        scheduleName = intent.getExtras().getString("schedule");
+        victims = dataBase.getVictims(scheduleName);
         flag = Integer.parseInt(dataBase.getFlag());
         time = 60000;
         for(String[] victim : victims) {
@@ -58,14 +60,18 @@ public class SmsSender extends Service {
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
         // STOP YOUR TASKS
         Log.d("Service", "Stop and Destroy");
-        shuflleVictims();
-        dataBase.populateDB(victims);
-        if(flag > 0) { flag = 0; }
-        dataBase.populateFlagTable("" + flag);
+        timer.cancel();
+        if(flag <= 0) {
+            shuflleVictims();
+            dataBase.populateDB(scheduleName,victims);
+            stopSelf();
+            restartService();
+        }
         stopSelf();
-        restartService();
+
     }
 
     @Override
@@ -89,8 +95,8 @@ public class SmsSender extends Service {
         timer = new CountDownTimer(time,tick) {
             @Override
             public void onTick(long l) {
-//                time -= tick;
-//                Log.d("Time_tick","" + time);
+                time -= tick;
+                Log.d("Time_tick","" + time);
             }
 
             @Override
